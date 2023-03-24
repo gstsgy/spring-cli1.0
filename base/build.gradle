@@ -1,0 +1,92 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+version = "0.0.1"
+repositories {
+    maven {
+        url 'https://maven.aliyun.com/repository/public'
+    }
+}
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier = 'sources'
+}
+task javadocJar(type: Jar) {
+    from javadoc
+    classifier = 'javadoc'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.0.5'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.5'
+    compileOnly('com.baomidou:mybatis-plus-boot-starter:3.5.3.1') {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-autoconfigure'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = project.group
+            artifactId = 'base'
+            version = project.version
+            // groupId,artifactId,version，如果不定义，则会按照以上默认值执行
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = '基础组件'
+                description = 'base'
+                url = 'https://github.com/gstsgy/spring-cli1.0'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'base'
+                        name = 'guyue'
+                        email = '122759654@qq.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/gstsgy/spring-cli1.0'
+                    developerConnection = 'scm:git:git@github.com:gstsgy/spring-cli1.0'
+                    url = 'https://github.com/gstsgy/spring-cli1.0'
+                }
+            }
+        }
+    }
+    // 定义发布到哪里
+    repositories {
+        maven {
+            url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                // 这里就是之前在issues.sonatype.org注册的账号
+                username ossrhUsername
+                password ossrhPassword
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+javadoc {
+    options.encoding = "UTF-8"
+    failOnError = false
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
