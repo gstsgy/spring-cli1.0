@@ -1,19 +1,62 @@
 plugins {
     id 'java'
+    id 'java-library'
+    id 'maven-publish'
 }
 
-group 'io.github.gstsgy'
+group 'com.gstsgy'
 version '1.0-SNAPSHOT'
 
 repositories {
-    mavenCentral()
+    maven {
+        url 'https://maven.aliyun.com/repository/public'
+    }
+    maven { url "https://repo1.maven.org/maven2/" }
+    maven {
+        credentials {
+            username '601a3e6c4fb2132a19a0f68f'
+            password 'JSdchNt9]wJZ'
+        }
+        url 'https://packages.aliyun.com/maven/repository/2073455-release-bTtGJA/'
+    }
+    maven {
+        credentials {
+            username '601a3e6c4fb2132a19a0f68f'
+            password 'JSdchNt9]wJZ'
+        }
+        url 'https://packages.aliyun.com/maven/repository/2073455-snapshot-ic6AXe/'
+    }
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.0.2'
+    api(project(':base'))
+    api 'io.github.gstsgy:excel-help:0.0.1'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.2'
 }
 
 test {
     useJUnitPlatform()
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'export'
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name 'wmsRepo'
+            url 'https://packages.aliyun.com/maven/repository/2073455-release-bTtGJA/'
+            credentials {
+                username '601a3e6c4fb2132a19a0f68f'
+                password 'JSdchNt9]wJZ'
+            }
+            authentication {
+                basic(BasicAuthentication)
+                digest(DigestAuthentication)
+            }
+        }
+    }
 }

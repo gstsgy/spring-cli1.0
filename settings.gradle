@@ -1,6 +1,5 @@
 rootProject.name = 'spring-cli1.0'
 include 'base'
-include 'excel-help'
 include 'sequence'
 include 'export'
 
