@@ -1,0 +1,63 @@
+plugins {
+    id 'java'
+    id 'war'
+    id 'org.springframework.boot' version '3.0.5'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.gstsgy'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    maven {
+        url 'https://maven.aliyun.com/repository/public'
+    }
+    maven {
+        credentials {
+            username '601a3e6c4fb2132a19a0f68f'
+            password 'JSdchNt9]wJZ'
+        }
+        url 'https://packages.aliyun.com/maven/repository/2073455-release-bTtGJA/'
+    }
+    maven {
+        credentials {
+            username '601a3e6c4fb2132a19a0f68f'
+            password 'JSdchNt9]wJZ'
+        }
+        url 'https://packages.aliyun.com/maven/repository/2073455-snapshot-ic6AXe/'
+    }
+    //mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+    //implementation(project(':base'))
+    implementation(project(':sequence'))
+    implementation(project(':permission'))
+    implementation 'com.microsoft.sqlserver:mssql-jdbc:11.2.2.jre17'
+    //implementation 'com.alibaba:druid-spring-boot-starter:1.2.15'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.0.5'
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    //implementation 'org.postgresql:postgresql:42.5.4'
+    implementation 'com.mysql:mysql-connector-j:8.0.32'
+    implementation('com.baomidou:mybatis-plus-boot-starter:3.5.3.1'){
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-autoconfigure'
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

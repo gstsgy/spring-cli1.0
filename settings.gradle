@@ -2,4 +2,6 @@ rootProject.name = 'spring-cli1.0'
 include 'base'
 include 'sequence'
 include 'export'
+include 'webapi'
+include 'permission'
 

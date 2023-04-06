@@ -1,0 +1,38 @@
+spring:
+  profiles:
+    active: dev
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+  #   数据源基本配置
+#    url: jdbc:sqlserver://192.168.1.106:1433;DatabaseName=dtwqd;TrustServerCertificate=True
+#    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+#    username: sa
+#    password: suray2020.
+#    druid:
+#      transaction-query-timeout: 50
+    url: jdbc:mysql://192.168.1.106:3306/wms?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=true&rewriteBatchedStatements=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 'suray2020.'
+#     url: jdbc:postgresql://192.168.1.207:9938/wms
+#     driver-class-name: org.postgresql.Driver
+#     username: root
+#     password: 'suray2020.'
+#     druid:
+#       validation-query: select 1
+
+  data:
+    redis:
+      port: 6379
+      password: suray2020.
+      database: 0
+      host: 192.168.1.233
+
+
+
+

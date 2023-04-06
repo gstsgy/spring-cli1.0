@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gstsgy.permission.mapper.OperatorMapper">
+
+    <select id="selectAllUser" resultType="com.gstsgy.permission.bean.view.OperatorVO">
+        select o.*,t.name dept_name from operator o,dept t where o.dept_id = t.id
+        and o.id != 1
+        and o.effective=1
+        and t.effective=1
+        <if test="operatorDO.deptId != null">
+            and o.dept_id = #{operatorDO.deptId}
+        </if>
+        <if test="operatorDO.code != null">
+            and o.code like concat('%',#{operatorDO.code},'%')
+        </if>
+        <if test="operatorDO.position != null">
+            and o.position like concat('%',#{operatorDO.position},'%')
+        </if>
+        order by o.insert_ymd
+    </select>
+</mapper>
