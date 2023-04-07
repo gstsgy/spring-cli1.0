@@ -1,6 +1,7 @@
 package com.gstsgy.permission;
 
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -11,5 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @MapperScan(value = {"com.gstsgy.permission.mapper"})
 @ComponentScan("com.gstsgy.permission")
+
 public class PermissionAutoConfiguration {
 }
