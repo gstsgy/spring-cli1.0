@@ -41,7 +41,7 @@ public class UserController {
     @Operation(description ="查询用户")
     @GetMapping("/users")
     public ResponseBean queryUser(OperatorDO operatorDO, Integer pageNum, Integer pageSize) {
-        return userService.queryUser( operatorDO, null, pageNum, pageSize);
+        return userService.queryUser( operatorDO,  pageNum, pageSize);
     }
 
     @Operation(description ="修改用户")

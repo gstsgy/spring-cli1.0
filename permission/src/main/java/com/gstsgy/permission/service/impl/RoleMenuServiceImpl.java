@@ -1,3 +1,4 @@
+
 package com.gstsgy.permission.service.impl;
 
 import com.gstsgy.permission.service.MenuService;
@@ -23,12 +24,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+
 /**
  * @ClassName RoleMenuServiceImpl
  * @Description TODO
  * @Author guyue
  * @Date 2020/10/23 上午10:42
  **/
+
 @Service
 @Transactional
 public class RoleMenuServiceImpl implements RoleMenuService {
@@ -53,26 +56,28 @@ public class RoleMenuServiceImpl implements RoleMenuService {
         if (userId == 1) {
             //查询模块
             tree = menuService.queryChildren(null, type).stream().
-                    map(item -> new TreeNodeVO(1, null, item.getName(), item.getId() + "")).
+                    map(item -> new TreeNodeVO(item.getId(), item.getName())).
                     collect(Collectors.toList());
             // 二级菜单
-            tree.forEach(item -> item.setChildren(menuService.queryChildren(Long.parseLong(item.getValue()), null).
-                    stream().map(it -> new TreeNodeVO(2, item.getValue(), it.getName(), it.getId() + "")).
+            tree.forEach(item -> item.setChildren(menuService.queryChildren(item.getId(), null).
+                    stream().map(it -> new TreeNodeVO(it.getId(), it.getName())).
                     collect(Collectors.toList())));
             // 三级菜单
             //systemParamService.
             tree.forEach(item -> item.getChildren().forEach(it ->
-                    it.setChildren(menuService.queryChildren(Long.parseLong(it.getValue()), null).stream().
-                            map(i -> new TreeNodeVO(3, it.getValue(), i.getName(), i.getId() + "")).
+                    it.setChildren(menuService.queryChildren(it.getId(), null).stream().
+                            map(i -> new TreeNodeVO(i.getId(), i.getName())).
                             collect(Collectors.toList()))));
-        } else {
+        } else
+        {
             // 查询所有菜单并缓存
-           /* QueryWrapper<MenuDO> mquery = new QueryWrapper<>();
+
+            QueryWrapper<MenuDO> mquery = new QueryWrapper<>();
             mquery.lambda().eq(MenuDO::getType, type);
 
             List<MenuDO> allMenus = menuMapper.selectList(mquery);
 
-            Map<Long, MenuDO> mapMenus = allMenus.stream().collect(Collectors.toMap(MenuDO::getId, it -> it));*/
+            Map<Long, MenuDO> mapMenus = allMenus.stream().collect(Collectors.toMap(MenuDO::getId, it -> it));
 
 
             // 1  通过用户 查询角色
@@ -81,37 +86,26 @@ public class RoleMenuServiceImpl implements RoleMenuService {
             // 所有角色
             List<UserRoleDO> list = userRoleMapper.selectList(query);
 
+            List<MenuDO> menuDOS = list.stream().flatMap(it -> roleMenuMapper.selectMenuIdByRole(it.getRoleId(), type).stream()).collect(Collectors.toList());
+
+            Map<Long,List<MenuDO>> page2fun = menuDOS.stream().collect(Collectors.groupingBy(MenuDO::getParentId));
+
+            List<MenuDO> pages = page2fun.keySet().stream().map(mapMenus::get).collect(Collectors.toList());
+
+            Map<Long,List<MenuDO>> model2page = pages.stream().collect(Collectors.groupingBy(MenuDO::getParentId));
+
+            List<MenuDO> models = model2page.keySet().stream().map(mapMenus::get).collect(Collectors.toList());
             // 三级菜单
-            List<TreeNodeVO> threeTree = list.stream().flatMap(it -> roleMenuMapper.selectMenuIdByRole(it.getRoleId(), type).stream()).
 
-                    map(i -> new TreeNodeVO(3, i.getParentId() + "", i.getName(), i.getId() + "")).distinct().
-                    collect(Collectors.toList());
-
-            Map<String, List<TreeNodeVO>> threeTreeMap = threeTree.stream().collect(Collectors.groupingBy(TreeNodeVO::getParentVal));
-
-            // 二级菜单
-            List<TreeNodeVO> twoTree = threeTreeMap.keySet().stream().map(it -> menuMapper.selectById(it)).
-                    map(i -> {
-                                TreeNodeVO treeNodeVO = new TreeNodeVO(2, i.getParentId() + "", i.getName(), i.getId() + "");
-                                treeNodeVO.setChildren(threeTreeMap.get(i.getId() + ""));
-                                return treeNodeVO;
-                            }
-                    ).distinct().
-                    collect(Collectors.toList());
-
-
-            Map<String, List<TreeNodeVO>> twoTreeMap = twoTree.stream().collect(Collectors.groupingBy(TreeNodeVO::getParentVal));
-
-            // 一级菜单
-            tree = twoTreeMap.keySet().stream().map(it -> menuMapper.selectById(it)).
-
-                    map(i -> {
-                                TreeNodeVO treeNodeVO = new TreeNodeVO(1, null, i.getName(), i.getId() + "");
-                                treeNodeVO.setChildren(twoTreeMap.get(i.getId() + ""));
-                                return treeNodeVO;
-                            }
-                    ).distinct().
-                    collect(Collectors.toList());
+            tree = models.stream().map(it->new TreeNodeVO(it.getId(),it.getName())).collect(Collectors.toList());
+            tree.forEach(item->{
+                item.setChildren(model2page.get(item.getId()).stream().map(it->new TreeNodeVO(it.getId(),it.getName())).collect(Collectors.toList()));
+            });
+            tree.forEach(item->{
+                item.getChildren().forEach(it->{
+                    it.setChildren(page2fun.get(it.getId()).stream().map(i->new TreeNodeVO(i.getId(),i.getName())).collect(Collectors.toList()));
+                });
+            });
         }
 
         return ResponseBean.getSuccess(tree);

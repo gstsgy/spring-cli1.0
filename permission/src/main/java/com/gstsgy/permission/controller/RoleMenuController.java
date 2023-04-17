@@ -39,7 +39,6 @@ public class RoleMenuController {
     @PostMapping("rolemenu")
     @Operation(description ="保存角色菜单")
     public ResponseBean saveRoleMenu(@Parameter(description  = "角色id 通过param传", required = true)Long roleId,
-                                     @Parameter(description  = "menu ID 通过data传", required = true)
                                      @RequestBody List<Long> menus) {
         return roleMenuService.saveMenu(roleId,menus);
     }

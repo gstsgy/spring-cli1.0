@@ -20,7 +20,7 @@ public class AuthOpenUrlEnable implements CommandLineRunner {
         AuthWhiteUtil.addUrl("/swagger-ui/.*");
         AuthWhiteUtil.addUrl("/v3/.*");
         AuthWhiteUtil.addUrl("/erp/.*");
-        JWTUtil.timeout = 1000 * 60 * 1;
+        JWTUtil.timeout = 1000 * 60*60*12*15;
 
     }
 }

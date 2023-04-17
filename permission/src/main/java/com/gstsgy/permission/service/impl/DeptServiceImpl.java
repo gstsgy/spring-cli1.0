@@ -47,7 +47,7 @@ public class DeptServiceImpl implements DeptService {
             return;
         }
 
-        DeptDO tmp = deptMapper.selectById(deptDO.getValue());
+        DeptDO tmp = deptMapper.selectById(deptDO.getId());
         if (tmp != null) {
             deptMapper.deleteById(tmp.getId());
         }
@@ -61,8 +61,8 @@ public class DeptServiceImpl implements DeptService {
     public ResponseBean queryDept() {
         List<DeptDO> root = queryChildren(null);
         List<TreeNodeVO> trees =
-                root.stream().map(item -> new TreeNodeVO(0, "", item.getName(), item.getId() + "")).collect(Collectors.toList());
-        trees.forEach(item -> getTree(item, 1));
+                root.stream().map(item -> new TreeNodeVO(item.getId(),item.getName())).collect(Collectors.toList());
+        trees.forEach(this::getTree);
         return ResponseBean.getSuccess(trees);
         //return null;
     }
@@ -71,9 +71,9 @@ public class DeptServiceImpl implements DeptService {
     public ResponseBean updateDept(TreeNodeVO deptDO) {
 
 
-        DeptDO tmp = deptMapper.selectById(deptDO.getValue());
+        DeptDO tmp = deptMapper.selectById(deptDO.getId());
         if (tmp != null) {
-            tmp.setName(deptDO.getTitle());
+            tmp.setName(deptDO.getLabel());
             return ResponseBean.getSuccess(deptMapper.updateById(tmp) > 0);
         }
         return ResponseBean.getParamUnmatchedException(LangCode.of("core.empty"), LangCode.of("permission.dept"));
@@ -113,13 +113,13 @@ public class DeptServiceImpl implements DeptService {
         return deptMapper.selectList(queryWrapper);
     }
 
-    private void getTree(TreeNodeVO treeNodeView, int n) {
-        List<DeptDO> depts = queryChildren(Long.parseLong(treeNodeView.getValue()));
+    private void getTree(TreeNodeVO treeNodeView) {
+        List<DeptDO> depts = queryChildren(treeNodeView.getId());
         if (depts == null || depts.size() == 0) {
             return;
         }
-        List<TreeNodeVO> trees = depts.stream().map(item -> new TreeNodeVO(n, treeNodeView.getValue(), item.getName(), item.getId() + "")).collect(Collectors.toList());
+        List<TreeNodeVO> trees = depts.stream().map(item -> new TreeNodeVO(item.getId(),item.getName())).collect(Collectors.toList());
         treeNodeView.setChildren(trees);
-        treeNodeView.getChildren().forEach(item -> getTree(item, n + 1));
+        treeNodeView.getChildren().forEach(this::getTree);
     }
 }

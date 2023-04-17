@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
-@Order(0)
+@Order(-1)
 @Slf4j
 @RestControllerAdvice
-public class ExceptionController {
+public class TokenExceptionController {
 //    @Autowired
 //    private LogService logService;
 

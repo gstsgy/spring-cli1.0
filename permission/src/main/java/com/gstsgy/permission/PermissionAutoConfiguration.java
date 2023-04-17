@@ -12,6 +12,5 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @MapperScan(value = {"com.gstsgy.permission.mapper"})
 @ComponentScan("com.gstsgy.permission")
-
 public class PermissionAutoConfiguration {
 }

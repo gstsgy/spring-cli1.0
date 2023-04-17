@@ -26,7 +26,6 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
-
     @Operation(description ="新增一个角色")
     @PostMapping("role")
     public ResponseBean addRole(@RequestBody RoleDO roleDO) {

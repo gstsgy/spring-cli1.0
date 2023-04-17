@@ -48,7 +48,7 @@ dependencies {
     implementation(project(':permission'))
     implementation 'com.microsoft.sqlserver:mssql-jdbc:11.2.2.jre17'
     //implementation 'com.alibaba:druid-spring-boot-starter:1.2.15'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.0.5'
+    //implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.0.5'
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     //implementation 'org.postgresql:postgresql:42.5.4'
     implementation 'com.mysql:mysql-connector-j:8.0.32'

@@ -37,7 +37,7 @@ public class DeptController {
         if(deptDO==null){
             return  ResponseBean.getParamEmptyException("部门信息");
         }
-        long peopleCount = deptService.getDeptPeopleCount(Long.parseLong(deptDO.getValue()));
+        long peopleCount = deptService.getDeptPeopleCount(deptDO.getId());
         if(peopleCount>0){
             return ResponseBean.getParamUnmatchedException("该部门还存在人员，不允许删除");
         }

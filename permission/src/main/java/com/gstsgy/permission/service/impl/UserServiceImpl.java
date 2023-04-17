@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseBean queryUser(OperatorDO operatorDO, String operatorId, Integer pageNum, Integer pageSize) {
+    public ResponseBean queryUser(OperatorDO operatorDO, Integer pageNum, Integer pageSize) {
         Page<OperatorVO> page = new Page<>(pageNum, pageSize);
         operatorMapper.selectAllUser(page, operatorDO);
         return ResponseBean.getSuccess(page);

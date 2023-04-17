@@ -1,3 +1,4 @@
+/*
 package com.gstsgy.test.conf;
 
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -24,3 +25,4 @@ public class RedisKeyConf {
         };
     }
 }
+*/

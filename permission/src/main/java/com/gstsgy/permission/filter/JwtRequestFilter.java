@@ -20,11 +20,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-       // HttpServletResponse res = response;
+        // HttpServletResponse res = response;
         response.addHeader("Access-Control-Allow-Credentials", "true");
         response.addHeader("Access-Control-Allow-Origin", "*");
-        response.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-        response.addHeader("Access-Control-Allow-Headers", "Content-Type,X-CAF-Authorization-Token,sessionToken,X-TOKEN");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS");
+        response.addHeader("Access-Control-Allow-Headers", "*");
         if (((HttpServletRequest) request).getMethod().equals("OPTIONS")) {
             ResponseBean responseBean = ResponseBean.getSuccess(true);
             response.setCharacterEncoding("UTF-8");
@@ -34,8 +34,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
 
-
-        if(!JWTUtil.isOpen){
+        if (!JWTUtil.isOpen) {
             chain.doFilter(request, response);
             return;
         }
@@ -54,17 +53,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             response.getWriter().write(objectMapper.writeValueAsString(responseBean));
             return;
         }
-        try {
-            JWTUtil.validateToken(token);
-            chain.doFilter(request, response);
 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            ResponseBean responseBean = ResponseBean.getNoLogin("Invalid Token");
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application/json;charset=utf8");
-            response.getWriter().write(objectMapper.writeValueAsString(responseBean));
-        }
+        JWTUtil.validateToken(token);
+
+
+        chain.doFilter(request, response);
     }
 }
 

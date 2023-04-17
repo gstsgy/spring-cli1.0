@@ -1,6 +1,20 @@
 spring:
   profiles:
     active: dev
+mybatis-plus:
+  mapper-locations: classpath*:mybatis/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+
+  global-config:
+    db-config:
+      update-strategy: ignored
+      logic-delete-field: effective  # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-value: 0 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 1 # 逻辑未删除值(默认为 0)
+      columnFormat: '`%s`' # 默认mysql
+
 
 ---
 spring:
@@ -15,7 +29,7 @@ spring:
 #    password: suray2020.
 #    druid:
 #      transaction-query-timeout: 50
-    url: jdbc:mysql://192.168.1.106:3306/wms?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=true&rewriteBatchedStatements=true
+    url: jdbc:mysql://192.168.1.207:3306/test?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=true&rewriteBatchedStatements=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 'suray2020.'
