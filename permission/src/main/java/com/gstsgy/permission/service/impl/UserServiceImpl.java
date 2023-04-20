@@ -143,37 +143,36 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseBean updateUserpw(OperatorDO user, String oldPwd) throws Exception {
 
-//        user.setPasswd(Encrypt.decryptToRSA(user.getPasswd(), APPLICATION_CONST.PASSWD_PRIVATE_KRY));
-//        oldPwd = Encrypt.decryptToRSA(oldPwd, APPLICATION_CONST.PASSWD_PRIVATE_KRY);
-//        QueryWrapper<OperatorDO> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.lambda().eq(OperatorDO::getCode, user.getCode());
-//        OperatorDO operator = operatorMapper.selectOne(queryWrapper);
-//
-//        if (operator != null) {
-//            if (operator.getId().equals(1L)) {
-//                return ResponseBean.getParamUnmatchedException(LangCode.of("permission.admin_disable_update"));
-//            }
-//            if (!StringUtils.hasLength(oldPwd)) {
-//                return ResponseBean.getParamEmptyException(LangCode.of("permission.old_passwd"));
-//            }
-//            OperatorDO old = operator.clone();
-//            old.setPasswd(oldPwd);
-//
-//
-//            if (!Objects.equals(encrypt(old), operator.getPasswd())) {
-//                return ResponseBean.getParamUnmatchedException(LangCode.of("permission.erroneous"), LangCode.of("permission.old_passwd"));
-//            }
-//            if (Objects.equals(encrypt(old), encrypt(user))) {
-//                return ResponseBean.getParamUnmatchedException(LangCode.of("permission.old_passwd_not_equals_new"));
-//            }
-//            operator.setPasswdUpdateYmd(DateUtil.getDate());
-//            operator.setPasswd(encrypt(user));
-//            operatorMapper.updateById(operator);
-//            return ResponseBean.getSuccess(true);
-//        } else {
-//            return ResponseBean.getParamUnmatchedException(LangCode.of("permission.erroneous"), LangCode.of("permission.user_code"));
-//        }
-        return ResponseBean.getSuccess(true);
+        user.setPasswd(user.getPasswd());
+
+        QueryWrapper<OperatorDO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(OperatorDO::getCode, user.getCode());
+        OperatorDO operator = operatorMapper.selectOne(queryWrapper);
+
+        if (operator != null) {
+            if (operator.getId().equals(1L)) {
+                return ResponseBean.getParamUnmatchedException(LangCode.of("permission.admin_disable_update"));
+            }
+            if (!StringUtils.hasLength(oldPwd)) {
+                return ResponseBean.getParamEmptyException(LangCode.of("permission.old_passwd"));
+            }
+            OperatorDO old = operator.clone();
+            old.setPasswd(oldPwd);
+
+
+            if (!Objects.equals(encrypt(old), operator.getPasswd())) {
+                return ResponseBean.getParamUnmatchedException(LangCode.of("permission.erroneous"), LangCode.of("permission.old_passwd"));
+            }
+            if (Objects.equals(encrypt(old), encrypt(user))) {
+                return ResponseBean.getParamUnmatchedException(LangCode.of("permission.old_passwd_not_equals_new"));
+            }
+            operator.setPasswdUpdateYmd(DateUtil.getDate());
+            operator.setPasswd(encrypt(user));
+            operatorMapper.updateById(operator);
+            return ResponseBean.getSuccess(true);
+        } else {
+            return ResponseBean.getParamUnmatchedException(LangCode.of("permission.erroneous"), LangCode.of("permission.user_code"));
+        }
     }
 
     @Override
@@ -216,7 +215,7 @@ public class UserServiceImpl implements UserService {
             return ResponseBean.getParamUnmatchedException(LangCode.of("permission.admin_disable_update"));
         }
         tmp.setPasswdUpdateYmd(DateUtil.getDate());
-        tmp.setPasswd("defaultPassWord");
+        tmp.setPasswd("admin123.");
         tmp.setPasswd(encrypt(tmp));
         operatorMapper.updateById(tmp);
         return ResponseBean.getSuccess(true);

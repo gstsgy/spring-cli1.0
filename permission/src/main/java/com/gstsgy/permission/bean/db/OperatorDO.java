@@ -38,7 +38,8 @@ public class OperatorDO extends BaseTable implements Cloneable {
     private Long deptId;
     @Schema(description = "用户名",required = true)
     private String code;
-
+    @Schema(description = "头像")
+    private String avatarImg;
     @Schema(description = "密码修改时间")
     private String passwdUpdateYmd;
 

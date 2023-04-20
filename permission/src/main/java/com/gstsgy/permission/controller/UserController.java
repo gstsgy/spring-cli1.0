@@ -3,6 +3,7 @@ package com.gstsgy.permission.controller;
 import com.gstsgy.base.model.ResponseBean;
 import com.gstsgy.permission.bean.db.OperatorDO;
 import com.gstsgy.permission.service.UserService;
+import com.gstsgy.permission.utils.JWTUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -69,7 +70,11 @@ public class UserController {
         return  ResponseBean.getSuccess(userService.queryOne(code)) ;
     }
 
-
+    @Operation(description ="查询自己")
+    @GetMapping("/self")
+    public ResponseBean queryUserBySelf() {
+        return  ResponseBean.getSuccess(userService.queryOne(JWTUtil.getUser())) ;
+    }
 
     @Operation(description ="查询用户枚举")
     @GetMapping("/userenum")
